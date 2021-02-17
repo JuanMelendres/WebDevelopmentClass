@@ -1,0 +1,22 @@
+{
+	"random": 28,
+	"random float": 32.784,
+	"bool": true,
+	"date": "1984-12-15",
+	"regEx": "helloooooooooooooooooooooooooo to you",
+	"enum": "generator",
+	"firstname": "Elora",
+	"lastname": "Devlen",
+	"city": "Monrovia",
+	"country": "Åland Islands",
+	"countryCode": "TR",
+	"email uses current data": "Elora.Devlen@gmail.com",
+	"email from expression": "Elora.Devlen@yopmail.com",
+	"array": [
+		"Basia",
+		"Ricky",
+		"Anthia",
+		"Georgina",
+		"Fred"
+	]
+}
