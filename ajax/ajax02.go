@@ -14,33 +14,20 @@ type book struct {
 }
 
 func mostrarHTML(w http.ResponseWriter, r *http.Request) {
-  
    http.ServeFile(w, r, "ajax02.html")
 }
 
-
 func darMensaje(w http.ResponseWriter, r *http.Request) {
-
 	//r.ParseForm() 
 	//x := r.Form.Get("y")
-  
-  	//fmt.Printf("%s", x)
-
-  
-
-  	libro := book{
-  			Titulo: "La Casa",
-  			Autor:  "Paco Roca",
-  		}
-
-   
+  //fmt.Printf("%s", x)
+  libro := book{
+    Titulo: "La Casa",
+    Autor:  "Paco Roca",
+  }
   //w.Header().Set("Content-Type", "application/json") 
-
-     json.NewEncoder(w).Encode(libro)
-
+  json.NewEncoder(w).Encode(libro)
 }
-
-
 
 func main() {
 	

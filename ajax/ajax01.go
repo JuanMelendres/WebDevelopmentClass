@@ -7,15 +7,8 @@ import (
 
 )
 
-
-
 func darMensaje(w http.ResponseWriter, r *http.Request) {
-  
-  
-  fmt.Printf("%s", r)
-
-
-
+  fmt.Fprintf(w, "Hello World, %s! \n'", r)
 }
 
 func main() {
