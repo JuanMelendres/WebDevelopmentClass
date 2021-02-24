@@ -17,12 +17,20 @@
 
   </head>
   	<body>
-        <div id="lugardetrabajo">
+        <div id="post">
+           POST
+        </div>
+        <div id="lugardetrabajo3">
            
         </div>
-
-        <div id="espacio">
-           espacio
+        <div id="get">
+          GET
+       </div>
+       <div id="lugardetrabajo2">
+           
+      </div>
+       <div id="espacio">
+        espacio
         </div>
         <div id="espacio1">
            <p>1</p>
@@ -30,6 +38,9 @@
            <p>3</p>
            <p>4</p>
 
+        </div>
+        <div style="font-size: large; color: blue; " id="lugardetrabajo">
+           
         </div>
 
 
@@ -42,43 +53,70 @@
 
 		  	let xmlhttp;
 
-      	function mostrar()
-      		{
+        function mostrar() {
+        	if (window.XMLHttpRequest) {
+            xmlhttp=new XMLHttpRequest();
+          }
+        	else {
+          	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+          }
 
-            
+        	xmlhttp.onreadystatechange=function() {
+          	if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+              document.getElementById("lugardetrabajo").innerHTML=xmlhttp.responseText;
+              console.log(xmlhttp.responseText);
+              //JSON.parse(xmlhttp.responseText)
+            }
+          }
+            var cadena="/json"
+            xmlhttp.open("GET",cadena,true);
+            xmlhttp.send();
+      		}
 
-        	if (window.XMLHttpRequest)
-          		{
-            		xmlhttp=new XMLHttpRequest();
-          		}
-        	else
-          		{
-          		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-          		}
+      	function mostrar2() {
+        	if (window.XMLHttpRequest) {
+            xmlhttp=new XMLHttpRequest();
+          }
+        	else {
+          	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+          }
 
+        	xmlhttp.onreadystatechange=function() {
+          	if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+              document.getElementById("lugardetrabajo2").innerHTML=xmlhttp.responseText;
+              console.log(xmlhttp.responseText);
+              //JSON.parse(xmlhttp.responseText)
+            }
+          }
+            var cadena="/dato"
+            xmlhttp.open("GET",cadena,true);
+            xmlhttp.send();
+      		}
 
+          function mostrar3() {
+        	if (window.XMLHttpRequest) {
+            xmlhttp=new XMLHttpRequest();
+          }
+        	else {
+          	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+          }
 
-        	xmlhttp.onreadystatechange=function()
-          		{
-          
-          		if (xmlhttp.readyState==4 && xmlhttp.status==200)
-            		{
-            		document.getElementById("lugardetrabajo").innerHTML=xmlhttp.responseText;
-                console.log(xmlhttp.responseText);
-                //JSON.parse(xmlhttp.responseText)
-
-            		}
-          		}
-
-            //var cadena="/dato"
-          	//xmlhttp.open("POST",cadena,true);
-               xmlhttp.open("GET","/dato",true);
-            // xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            // xmlhttp.send("y=3");
-          	   xmlhttp.send();
+        	xmlhttp.onreadystatechange=function() {
+          	if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+              document.getElementById("lugardetrabajo3").innerHTML=xmlhttp.responseText;
+              console.log(xmlhttp.responseText);
+              //JSON.parse(xmlhttp.responseText)
+            }
+          }
+            var cadena2="/dato"
+            xmlhttp.open("POST",cadena2,true);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send("y=3");
       		}
 
       		document.getElementById("espacio").addEventListener("click",mostrar);
+          document.getElementById("get").addEventListener("click",mostrar2);
+          document.getElementById("post").addEventListener("click",mostrar3);
 
 
               </script>
