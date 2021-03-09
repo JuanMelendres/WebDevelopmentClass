@@ -6,13 +6,39 @@
    
     <style>
 
-    
+      #form > input {
+        display: flex;
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+      }
+
+      .button {
+        padding: 15px 32px;
+        text-align: center;
+        display: inline-block;
+        font-size: large;
+      }
+
+      #add {
+        background-color: #27cc2c; /* Green */
+        border-radius: 1rem;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: large;
+      }
 
     </style>
 
   </head>
   	<body>
         <div id="lugardetrabajo">
+          <h1>Actividad 1</h1>
           {{ nombre }}
 
           <div class="ui form">
@@ -30,13 +56,29 @@
           <br>
 
           <ul v-for="book in libros">
-            <li v-if="book.oferta != null" style="font-size: large; color: brown;">
-                {{ book.autor }} - {{ book.titulo }} - {{ book.oferta }} %
+            <li v-if="book.oferta" style="font-size: large; color: brown;">
+                {{ book.autor }} - {{ book.titulo }} - disponibles {{ book.cantidad }} - {{ book.descuento }} %
             </li>
             <li v-else>
-              {{ book.autor }} - {{ book.titulo }} - No hay oferta :(
+              {{ book.autor }} - {{ book.titulo }} - disponibles {{ book.cantidad }} - No hay oferta :(
           </li>
           </ul>
+
+          <div>
+            <h1>Actividad 2</h1>
+            <div id='form'>
+              <input type="text" id="nameField" v-model="inputFields.author" placeholder="nombre">
+              <input type="text" id="titleField" v-model="inputFields.title" placeholder="Título">
+              <div id="offer">
+                <label for="oferta">Tiene oferta</label>
+                <input type="checkbox" value="true" v-model="inputFields.oferta">
+              </div>
+              <input type="number" id="cantidadField" v-model="inputFields.cantidad" placeholder="Cantidad">
+              <input v-if="inputFields.oferta" type="number" id="descuentoField" v-model="inputFields.descuento" placeholder="Descuento">
+              <button id="add" v-on:click="addBook">Agregar nuevo</button>
+            </div>
+          </div>
+          <br>
         </div>
 
         <div id="espacio">
@@ -54,30 +96,67 @@
               nombre: "La elegante vagancia",
               libros:[
                 {
-                  autor:"Ray Bradbury",
-                  titulo:"Fahrenheit 451",
-                  oferta: 50
+                  autor: "Ray Bradbury",
+                  titulo: "Fahrenheit 451",
+                  oferta: true,
+                  cantidad: 24,
+                  descuento: 50,
                 },
                 {
                   autor:"Clarke",
                   titulo:"la infancia",
-                  oferta: null
+                  oferta: false,
+                  cantidad: 12,
+                  descuento: null,
                 },
                 {
                   autor:"Arthur P.",
                   titulo:"El fin",
-                  oferta: 35
+                  oferta: true,
+                  cantidad: 40,
+                  descuento: 30,
                 },
                 {
                   autor:"C. Clarke",
                   titulo:"El fin de la vida",
-                  oferta: null
+                  oferta: false,
+                  cantidad: 5,
+                  descuento: null,
                 }
-              ]
+              ],
+              inputFields: {
+                author: "",
+                title: "",
+                oferta: false,
+                cantidad: null,
+                descuento: null
+              }
             },
             methods: {
               metodo: function() {
                 console.log("click");
+              },
+              addBook: function() {
+                console.log(this.inputFields);
+                if (this.inputFields.author == "" ||
+                    this.inputFields.title == "" || 
+                    this.inputFields.cantidad == null ||
+                    this.inputFields.descuento == null) {
+                  alert("All fields must be completed!");
+                } else {
+                  this.libros.push({
+                      autor: this.inputFields.author,
+                      titulo: this.inputFields.title,
+                      oferta: this.inputFields.oferta,
+                      cantidad: this.inputFields.cantidad,
+                      descuento: this.inputFields.descuento,
+                  });
+                    this.inputFields.author = "";
+                    this.inputFields.title = ""; 
+                    this.inputFields.oferta = false;
+                    this.inputFields.cantidad = null;
+                    this.inputFields.descuento = false;
+                }
               }
             }
             
