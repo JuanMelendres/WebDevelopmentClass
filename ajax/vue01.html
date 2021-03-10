@@ -3,6 +3,7 @@
     <meta charset="utf-8">
     <title>Vue Semestre i</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
    
     <style>
 
@@ -55,14 +56,33 @@
           </button>
           <br>
 
-          <ul v-for="book in libros">
+          <ul v-for="(book, i) in ordenarLibros">
             <li v-if="book.oferta" style="font-size: large; color: brown;">
-                {{ book.autor }} - {{ book.titulo }} - disponibles {{ book.cantidad }} - {{ book.descuento }} %
+              {{ book.autor }} - {{ book.titulo }} - disponibles {{ book.cantidad }} - {{ book.descuento }} %
+              <button v-on:click="deleteBook(i)">Eliminar</button>
+              <button v-on:click="edit(i)">Editar</button>
             </li>
             <li v-else>
               {{ book.autor }} - {{ book.titulo }} - disponibles {{ book.cantidad }} - No hay oferta :(
-          </li>
+              <button v-on:click="deleteBook(i)">Eliminar</button>
+              <button v-on:click="edit(i)">Editar</button>
+            </li>
           </ul>
+
+          <div v-if="show">
+            <h1>Actividad 3</h1>
+            <div id='form'>
+              <input type="text" id="nameField" v-model="editFields.author" placeholder="nombre">
+              <input type="text" id="titleField" v-model="editFields.title" placeholder="Título">
+              <div id="offer">
+                <label for="oferta">Tiene oferta</label>
+                <input type="checkbox" value="true" v-model="editFields.oferta">
+              </div>
+              <input v-if="editFields.oferta" type="number" id="descuentoField" v-model="editFields.descuento" placeholder="Descuento">
+              <input type="number" id="cantidadField" v-model="editFields.cantidad" placeholder="Cantidad">
+              <button id="add" v-on:click="updateBook">Editar</button>
+            </div>
+          </div>
 
           <div>
             <h1>Actividad 2</h1>
@@ -73,8 +93,8 @@
                 <label for="oferta">Tiene oferta</label>
                 <input type="checkbox" value="true" v-model="inputFields.oferta">
               </div>
-              <input type="number" id="cantidadField" v-model="inputFields.cantidad" placeholder="Cantidad">
               <input v-if="inputFields.oferta" type="number" id="descuentoField" v-model="inputFields.descuento" placeholder="Descuento">
+              <input type="number" id="cantidadField" v-model="inputFields.cantidad" placeholder="Cantidad">
               <button id="add" v-on:click="addBook">Agregar nuevo</button>
             </div>
           </div>
@@ -89,7 +109,7 @@
 
 		  <script type="text/javascript">
           //Una instancia de Vue que manejará esa área del documento #lugardetrabajo
-          c= new Vue({
+          c = new Vue({
             el: "#lugardetrabajo",
             data :{
               ifActive: true,
@@ -130,26 +150,33 @@
                 oferta: false,
                 cantidad: null,
                 descuento: null
-              }
+              },
+              editFields: {
+                author: "",
+                title: "",
+                oferta: false,
+                cantidad: null,
+                descuento: null
+              },
+              show:Boolean = false,
+              currentIndex: Number = 0,
             },
             methods: {
               metodo: function() {
                 console.log("click");
               },
               addBook: function() {
-                console.log(this.inputFields);
                 if (this.inputFields.author == "" ||
                     this.inputFields.title == "" || 
-                    this.inputFields.cantidad == null ||
-                    this.inputFields.descuento == null) {
-                  alert("All fields must be completed!");
+                    this.inputFields.cantidad == null) {
+                  alert("Debes de completar los inputs");
                 } else {
                   this.libros.push({
-                      autor: this.inputFields.author,
-                      titulo: this.inputFields.title,
-                      oferta: this.inputFields.oferta,
-                      cantidad: this.inputFields.cantidad,
-                      descuento: this.inputFields.descuento,
+                    autor: this.inputFields.author,
+                    titulo: this.inputFields.title,
+                    oferta: this.inputFields.oferta,
+                    cantidad: this.inputFields.cantidad,
+                    descuento: this.inputFields.descuento,
                   });
                     this.inputFields.author = "";
                     this.inputFields.title = ""; 
@@ -157,9 +184,30 @@
                     this.inputFields.cantidad = null;
                     this.inputFields.descuento = false;
                 }
+              },
+              deleteBook: function(index) {
+                this.libros.splice(index, 1);
+              },
+              edit: function(index) {
+                this.show = true;
+                this.currentIndex = index
+              },
+              updateBook: function() {
+                aux = this.libros[this.currentIndex];
+
+                aux.autor = this.editFields.author,
+                aux.titulo = this.editFields.title,
+                aux.oferta = this.editFields.oferta,
+                aux.cantidad = this.editFields.cantidad,
+                aux.descuento = this.editFields.descuento
+              }
+            },
+            computed: {
+              ordenarLibros: function(){
+                console.log("computed");
+                return _.orderBy(this.libros, ['autor'])
               }
             }
-            
           });
 
 		  </script>
