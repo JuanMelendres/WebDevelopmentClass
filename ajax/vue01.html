@@ -34,6 +34,10 @@
         font-size: large;
       }
 
+      .list {
+        list-style-type: circle;
+      }
+
     </style>
 
   </head>
@@ -105,7 +109,20 @@
           </div>
         </div>
         <br>
+
+        <div>
+          <h1>Actividad 4</h1>
+          <div>
+            <ul v-for="movie in peliculas" class="list">
+              <li>
+                {{movie.name}} - {{movie.year}} - {{movie.director}} - valoración ({{movie.rating}})
+              </li>
+            </ul>
+          </div>
+        </div>
+        <br>
       </div>
+
       <div id="espacio">
           espacio
       </div>
@@ -168,6 +185,7 @@
               noAbrimos: Boolean = false,
               tomorow: "",
               currentIndex: Number = 0,
+              peliculas: [],
             },
             methods: {
               metodo: function() {
@@ -249,11 +267,11 @@
                 console.log("Estado", data);
               }
             },
-            // watch: {
-            //   tienda: function (data) {
-            //     console.log("Estado", data);
-            //   }
-            // },
+            created() {
+              fetch("/movie")
+                .then(response => response.json())
+                .then(data => this.peliculas = data);
+            },
           });
 
 		  </script>
