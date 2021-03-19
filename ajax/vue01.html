@@ -4,7 +4,14 @@
     <title>Vue Semestre i</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-   
+    <!-- Add Bootstrap and Bootstrap-Vue CSS to the <head> section -->  
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>  
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>    
+    <!-- Add Vue and Bootstrap-Vue JS just before the closing </body> tag -->  
+    <script src="https://unpkg.com/vue/dist/vue.min.js"> </script>  
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"> </script>
+    <!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
 
       #form > input {
@@ -42,31 +49,69 @@
 
   </head>
   	<body>
-      <div id="lugardetrabajo">
+      <div id="lugardetrabajo" class="container">
         <h1 v-if="cerrado">Por el momento estamos cerrados</h1>
-        <img v-if="cerrado" src="https://insidescoopsf.sfgate.com/files/2013/04/closed.gif"/>
+        <img v-if="cerrado" class="img-rounded" src="https://insidescoopsf.sfgate.com/files/2013/04/closed.gif"/>
         <h1>Actividad 1</h1>
         {{ nombre }}
 
-        <div class="ui form">
+        <div class="form-group">
+          <label>User Input:</label>
+          <input type="text" class="form-control" v-model="libros[0].autor">
+        </div>
+
+        <!-- <div class="ui form">
           <div class="field">
             <br>
             <label>User Input</label>
             <input type="text" v-model="libros[0].autor">
             <br>
           </div>
-        </div>
+        </div> -->
         <br>
-        <button class="ui button" v-on:click="metodo">
+        <button v-on:click="metodo" type="button" class="btn btn-success">
           Otro libro
         </button>
-        <button class="ui button" v-on:click="dia">
+        <!-- class="ui button" -->
+        <button v-on:click="dia" type="button" class="btn btn-info">
           mañana
         </button>
         <h4 v-if="noAbrimos">No abrimos mañana {{ tomorow }}</h4>
         <br>
-
-        <ul v-for="(book, i) in ordenarLibrosCantidad">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Autor</th>
+              <th>Libro</th>
+              <th>Cantidad</th>
+              <th>Oferta</th>
+              <th>Eliminar</th>
+              <th>Editar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(book, i) in ordenarLibrosCantidad" >
+              <td>{{ book.autor }}</td>
+              <td>{{ book.titulo }}</td>
+              <td>{{ book.cantidad }}</td>
+              <td v-if="book.oferta" style="font-size: x-large; color: brown;">
+                {{ book.descuento }} %
+              </td>
+              <td v-else style="font-size: large;">No hay oferta :(</td>
+              <td>
+                <button v-on:click="deleteBook(i)" type="button" class="btn btn-danger">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+              <td>
+                <button v-on:click="edit(i)" type="button" class="btn btn-light">
+                  <i class="fa fa-pencil"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- <ul v-for="(book, i) in ordenarLibrosCantidad">
           <li v-if="book.oferta" style="font-size: large; color: brown;">
             {{ book.autor }} - {{ book.titulo }} - disponibles {{ book.cantidad }} - {{ book.descuento }} %
             <button v-on:click="deleteBook(i)">Eliminar</button>
@@ -77,11 +122,33 @@
             <button v-on:click="deleteBook(i)">Eliminar</button>
             <button v-on:click="edit(i)">Editar</button>
           </li>
-        </ul>
-
+        </ul> -->
         <div v-if="show">
           <h1>Actividad 3</h1>
-          <div id='form'>
+          <form>
+            <div class="form-group">
+              <label>Nombre del Autor:</label>
+              <input type="text" class="form-control" id="nameField" v-model="libros[currentIndex].autor">
+            </div>
+            <div class="form-group">
+              <label>Nombre del libro:</label>
+              <input type="text" class="form-control" id="titleField" v-model="libros[currentIndex].titulo">
+            </div>
+            <div class="form-group" id="offer">
+              <label for="oferta">Tiene oferta</label>
+              <input type="checkbox" v-model="libros[currentIndex].oferta">
+            </div>
+            <div v-if="libros[currentIndex].oferta" class="form-group">
+              <label for="oferta">Descuento:</label>
+              <input type="number" class="form-control" id="descuentoField" v-model="libros[currentIndex].descuento">
+            </div>
+            <div class="form-group">
+              <label>Cantidad:</label>
+              <input type="number" class="form-control" id="cantidadField" v-model="libros[currentIndex].cantidad">
+            </div>
+            <button type="submit" class="btn btn-primary" v-on:click="updateBook">Editar</button>
+          </form>
+          <!-- <div id='form'>
             <input type="text" id="nameField" v-model="editFields.author" placeholder="nombre">
             <input type="text" id="titleField" v-model="editFields.title" placeholder="Título">
             <div id="offer">
@@ -91,12 +158,35 @@
             <input v-if="editFields.oferta" type="number" id="descuentoField" v-model="editFields.descuento" placeholder="Descuento">
             <input type="number" id="cantidadField" v-model="editFields.cantidad" placeholder="Cantidad">
             <button id="add" v-on:click="updateBook">Editar</button>
-          </div>
+          </div> -->
         </div>
 
         <div>
           <h1>Actividad 2</h1>
-          <div id='form'>
+          <form>
+            <div class="form-group">
+              <label>Nombre del Autor:</label>
+              <input type="text" class="form-control" id="nameField" placeholder="C. Clarke" v-model="inputFields.author">
+            </div>
+            <div class="form-group">
+              <label>Nombre del libro:</label>
+              <input type="text" class="form-control" id="titleField" placeholder="El fin de la vida" v-model="inputFields.title">
+            </div>
+            <div class="form-group" id="offer">
+              <label for="oferta">Tiene oferta</label>
+              <input type="checkbox" value="true" v-model="inputFields.oferta">
+            </div>
+            <div v-if="inputFields.oferta" class="form-group">
+              <label for="oferta">Descuento:</label>
+              <input type="number" class="form-control" id="inputFields" placeholder="30" v-model="inputFields.descuento">
+            </div>
+            <div class="form-group">
+              <label>Cantidad:</label>
+              <input type="number" class="form-control" id="cantidadField" placeholder="5" v-model="inputFields.cantidad">
+            </div>
+            <button type="submit" class="btn btn-primary" v-on:click="addBook">Agregar nuevo</button>
+          </form>
+          <!-- <div id='form'>
             <input type="text" id="nameField" v-model="inputFields.author" placeholder="nombre">
             <input type="text" id="titleField" v-model="inputFields.title" placeholder="Título">
             <div id="offer">
@@ -106,19 +196,31 @@
             <input v-if="inputFields.oferta" type="number" id="descuentoField" v-model="inputFields.descuento" placeholder="Descuento">
             <input type="number" id="cantidadField" v-model="inputFields.cantidad" placeholder="Cantidad">
             <button id="add" v-on:click="addBook">Agregar nuevo</button>
-          </div>
+          </div> -->
         </div>
         <br>
-
         <div>
           <h1>Actividad 4</h1>
-          <div>
+          <div class="row">
+            <div class="col-sm-6 mb-5" v-for="movie in peliculas">
+              <div class="card" style="width:400px; border-radius: 1rem;">
+                <!-- <img class="card-img-top" src="{{movie.url}}" style="width:100%"> -->
+                <div class="card-body">
+                  <h4 class="card-title">{{movie.name}}</h4>
+                  <p class="card-text">Año {{movie.year}}</p>
+                  <p class="card-text">Director {{movie.director}}</p>
+                  <p class="card-text">Valoración {{movie.rating}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div>
             <ul v-for="movie in peliculas" class="list">
               <li>
                 {{movie.name}} - {{movie.year}} - {{movie.director}} - valoración ({{movie.rating}})
               </li>
             </ul>
-          </div>
+          </div> -->
         </div>
         <br>
       </div>
