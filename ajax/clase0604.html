@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Vue Semestre i</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <!-- Add Bootstrap and Bootstrap-Vue CSS to the <head> section -->  
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>  
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>    
+    <!-- Add Vue and Bootstrap-Vue JS just before the closing </body> tag -->  
+    <script src="https://unpkg.com/vue/dist/vue.min.js"> </script>  
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"> </script>
+    <!-- Add icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      body {
+        background-color: #171717;
+        color: white;
+        height: 100% !important;
+        min-height: 100% !important;
+      }
+
+      #lugardetrabajo {
+        height: 100% !important;
+        min-height: 100% !important;
+      }
+
+    </style>
+
+  </head>
+  	<body>
+      <div id="lugardetrabajo" class="container">
+        <h1>Actividad con Endpoint {{nombre}}</h1>
+        <br>
+        <div class="row">
+          <div class="col-lg-2">
+           <h4>Categorias</h4>
+          </div>
+          <div class="col-lg-2">
+            <h4>Top Canciones</h4>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-lg-2" style="background-color: #000;">
+            <nav class="navbar navbar-expand-lg flex-column navbar-dark">
+              <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav flex-column mr-auto mt-2 mt-lg-0">
+                  <li v-for="(category, i) in datos" class="nav-item">
+                    <a class="nav-link" href="#" style="color: #b3b3b3;">{{category.name}}</a>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+          <div class="row ml-4">
+            <table class="table table-hover table-dark table-borderless"
+              style="text-align: left; background-color: #171717;">
+              <thead>
+                <tr style="border-bottom: 1px solid hsla(0,0%,100%,.1);">
+                  <th>#</th>
+                  <th colspan="2">TÍTULO</th>
+                  <th>ÁLBUM</th>
+                  <th style="text-align: center;">
+                      <i class="fa fa-clock-o" aria-hidden="true"></i>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(cancion, i) in songs">
+                  <td class="align-middle"><b>{{i+1}}</b></td>
+                  <td class="align-middle">
+                      <img v-bind:src="cancion.album.images[1].url" class="rounded float-left"
+                          v-bind:alt="cancion.album.name" height="48">
+                  </td>
+                  <td class="align-middle">
+                      {{ cancion.name }}<br />
+                      <span v-if="cancion.explicit" class="badge badge-light">E</span>
+                      <span class="artist" v-for="artista in cancion.artists">
+                          {{ artista.name }},
+                      </span>
+                  </td>
+                  <td class="align-middle">{{ cancion.album.name }}</td>
+                  <td class="align-middle">
+                    {{ Math.floor(cancion.duration_ms / 60000) + ":" + ((cancion.duration_ms % 60000) / 1000).toFixed(0) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+		  <script type="text/javascript">
+          //Una instancia de Vue que manejará esa área del documento #lugardetrabajo
+          c = new Vue({
+            el: "#lugardetrabajo",
+            data :{
+              nombre: "Spotify",
+              datos: [],
+              songs: []
+            },
+            created: function(){
+                console.log("instancia creada");
+                fetch("https://api.spotify.com/v1/browse/categories", {
+                      method: 'GET',
+                      headers: {
+                          'Content-Type': 'appliacation/json',
+                          'Authorization': 'Bearer BQBIE1UcDR8ieauLmRiZhbpmnmJKxNHUD8bhtj5vufCkWSlB_aItX--zHhrgyEQsZ4nr7uITb3GZfIU0W4vJyyPXN1q5CFfYXN2ypyprUsmQu4UyeAlblXXxhuukHVxcZ0oRLsELDSF3_vnyY_JEkOdwGgJQ5tYdN8hw'
+                      }
+                  })
+                  .then(response => response.json())
+                  .then(res => (this.datos = res.categories.items));
+                fetch("https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=15", {
+                      method: 'GET',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': 'Bearer BQCmsg7cfkEugVn48f9WspPdtNKYpXO-4UUY4LkaC0n3nLY3H9feVrpzjVxz3ugYHrXqQtz0dd7MnVRaaAzJDPcVSOmO-x0ebzxbmiNZKF3DSCY8C8DJIIB_p0n1fz4Zb7OYX8DmLLtIs3f8E3bc52qCQASnqmBWnxev'
+                      }
+                  })
+                  .then(response => response.json())
+                  .then(data => (this.songs = data.items));
+            },
+            methods: {
+              metodo: function() {
+                console.log("click");
+              },
+            },
+          });
+
+		  </script>
+	</body>
+</html>
